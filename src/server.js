@@ -7,19 +7,30 @@ app.set("view engine", "pug");
 app.set("views", __dirname+"/views");
 app.use("/public", express.static(__dirname + "/public"));
 app.get("/", (_, res) => res.render("home"));
-app.get("/*", (_, res) => res.render("/"));
-
-const handleListen = () => console.log(`Listen on http://localhost:3000`);
+app.get("/*", (_, res) => res.render("home"));
 const server = http.createServer(app);
 const wss = new WebSocket.Server({server});
+server.listen(3000, () => console.log(`Listen on http://localhost:3000`));
+
+const sockets = [];
 
 wss.on("connection", (socket) => {
+    sockets.push(socket);
+    socket["nickname"] = "Anon";
     console.log("Connected to Browser");
     socket.on("close", () => console.log("Disconnected from Browser"));
-    socket.on("message", (message) => {
-        console.log(message.toString("utf8"));
-    })
-    socket.send("Hello");
+    socket.on("message", (msg) => {
+        const message = JSON.parse(msg);
+        switch(message.type){
+            case "new_message":
+                sockets.forEach((aSocket) => {
+                    console.log(message);
+                    aSocket.send(`${socket.nickname} : ${message.payload}`);
+                });
+            case "nickname":
+                socket["nickname"] = message.payload;
+        }
+        
+    });
 });
 
-server.listen(3000, handleListen);
