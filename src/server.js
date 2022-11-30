@@ -13,7 +13,12 @@ const wsServer = SocketIO(httpServer);
 httpServer.listen(3000, () => console.log(`Listen on http://localhost:3000`));
 
 wsServer.on("connection", socket => {
-    console.log(socket);
+    socket.on("enter_room", (msg, done) => {
+        console.log(msg);
+        setTimeout(() => {
+            done();
+        }, 3000);
+    });
 });
 
 /*
