@@ -13,11 +13,13 @@ const wsServer = SocketIO(httpServer);
 httpServer.listen(3000, () => console.log(`Listen on http://localhost:3000`));
 
 wsServer.on("connection", socket => {
-    socket.on("enter_room", (msg, done) => {
-        console.log(msg);
-        setTimeout(() => {
-            done();
-        }, 3000);
+    console.log(socket.id)
+    socket.onAny((event) => {
+        console.log(`Socket Event:${event}`);
+    });
+    socket.on("enter_room", (roomName, done) => {
+        socket.join(roomName);
+        done();
     });
 });
 
