@@ -4,7 +4,7 @@ const form = welcome.querySelector("form");
 const room = document.getElementById("room");
 room.hidden = true;
 const chooseRoom = document.getElementById("chooseRoom");
-const firstNickname=  document.getElementById("firstNickname");
+const firstNickname = document.getElementById("firstNickname");
 
 let roomName;
 
@@ -24,9 +24,9 @@ function handleMessageSubmit(event) {
   input.value = "";
 }
 function handleNicknameSubmit(event) {
-    event.preventDefault();
-    const input = room.querySelector("#name input");
-    socket.emit("nickname", input.value);
+  event.preventDefault();
+  const input = room.querySelector("#name input");
+  socket.emit("nickname", input.value);
 }
 function showRoom() {
   welcome.hidden = true;
@@ -39,28 +39,41 @@ function showRoom() {
   nameForm.addEventListener("submit", handleNicknameSubmit);
 }
 function handleRoomSubmit(event) {
-    event.preventDefault();
-    const input = form.querySelector("input");
-    socket.emit("enter_room", input.value, showRoom);
-    roomName = input.value;
-    input.value = "";
+  event.preventDefault();
+  const input = form.querySelector("input");
+  socket.emit("enter_room", input.value, showRoom);
+  roomName = input.value;
+  input.value = "";
 }
-function handleFirstNickname(event){
-    event.preventDefault();
-    const input = firstNickname.querySelector("input");
-    socket.emit("enter_first_Nickname", input.value);
-    input.value=""
+function handleFirstNickname(event) {
+  event.preventDefault();
+  const input = firstNickname.querySelector("input");
+  socket.emit("enter_first_Nickname", input.value);
+  input.value = "";
 }
 
 form.addEventListener("submit", handleRoomSubmit);
 firstNickname.addEventListener("submit", handleFirstNickname);
 
-
 socket.on("welcome", (user) => {
-    addMessage(`${user} arrived!`);
-  });
+  addMessage(`${user} arrived!`);
+});
 socket.on("bye", (left) => {
-addMessage(`${left} left`);
+  addMessage(`${left} left`);
 });
 
 socket.on("new_message", addMessage);
+// socket.on("room_change", console.log); // === socket.on("room_change", msg => console.log(msg));
+socket.on("room_change", (rooms) => {
+  const roomList = welcome.querySelector("ul");
+  roomList.innerHTML = "";
+  if (rooms.length === 0) {
+    roomList.innerHTML = "";
+    return;
+  }
+  rooms.forEach((room) => {
+    const li = document.createElement("li");
+    li.innerText = room;
+    roomList.append(li);
+  });
+});
