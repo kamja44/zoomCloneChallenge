@@ -9,24 +9,11 @@ html(lang="en")
     body 
         header 
             h1 Koom 
-        main
-            div#welcome
-                form#chooseRoom
-                    input(placeholder="room name", required, type="text")
-                    button Enter Room
-                h4 Open Rooms: 
-                ul
-                form#firstNickname
-                    input(placeholder="Enter your nickname", type="text")
-                    button Save
-            div#room
-                h3
-                ul 
-                form#name
-                    input(placeholder="nickname", required, type="text")
-                    button Save
-                form#msg
-                    input(placeholder="message", required, type="text")
-                    button Send
+        main 
+            div#myStream
+                //- playsinline <- 모바일에서 video 실행 방지
+                video#myFace(autoPlay, playsinline, width="400", height="400")
+                button#mute Mute
+                button#camera Camera Off
         script(src="/socket.io/socket.io.js")
         script(src="/public/js/app.js") 
