@@ -178,3 +178,12 @@ socket["nickname"] = message.payload;
 
 const handleListen = () => console.log(`Listening on http://localhost:3000`);
 httpServer.listen(3000, handleListen);
+
+npm i -g localtunnel <- 서버를 전 세계와 공유
+
+localtunnel설치 후 lt로 서버 호출
+
+app.js의 makeConnection() 함수의 iceServers
+
+- google에서 제공하는 stunServer
+- stunServer = 공용주소를 알아내기 위해 사용(서로다른 네트워크 상에 있을 경우 사용)
